@@ -48,7 +48,7 @@ const Checkout = () => {
 
     try {
       // Send order details to the backend
-      const response = await fetch('http://localhost:4000/api/orders', {
+      const response = await fetch('https://buyit-api-theta.vercel.app/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderDetails)

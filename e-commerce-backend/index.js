@@ -1,4 +1,4 @@
-const port = https://buyit-api-theta.vercel.app/;
+const port = https://buyit-api-theta.vercel.app;
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");

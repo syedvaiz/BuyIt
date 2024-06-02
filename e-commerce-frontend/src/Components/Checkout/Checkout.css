@@ -1,0 +1,65 @@
+/* src/components/Checkout/Checkout.css */
+
+.checkout {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .checkout h1, .checkout h2 {
+    margin-bottom: 20px;
+  }
+  
+  .checkout-summary {
+    margin-bottom: 40px;
+  }
+  
+  .checkout-item {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .checkout-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 20px;
+  }
+  
+  .checkout-item-details p {
+    margin: 0;
+    margin-bottom: 10px;
+  }
+  
+  .checkout-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .checkout-form-group {
+    margin-bottom: 20px;
+  }
+  
+  .checkout-form-group label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .checkout-form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  .checkout-submit-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .checkout-submit-btn:hover {
+    background-color: #0056b3;
+  }
+  

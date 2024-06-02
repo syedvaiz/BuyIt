@@ -9,7 +9,7 @@ const ShopCategory = (props) => {
   const [allproducts, setAllProducts] = useState([]);
 
   const fetchInfo = () => { 
-    fetch('https://buyit-api-theta.vercel.app/allproducts') 
+    fetch('https://buyit-api-theta.vercel.app/allproducts/') 
       .then((res) => res.json()) 
       .then((data) => setAllProducts(data));
   };

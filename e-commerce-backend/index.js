@@ -7,14 +7,14 @@ const multer = require("multer");
 const path = require("path");
 const cors = require("cors");
 
-
+app.use(express.json());
 app.use(cors({
   origin: 'https://buyit-frontend.vercel.app', // Allow requests from your frontend
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
 }));
-app.use(express.json());
+
 // Database Connection With MongoDB
 mongoose.connect("mongodb+srv://Test:test123@cluster0.rgljqzx.mongodb.net/e-commerce");
 

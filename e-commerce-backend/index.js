@@ -9,7 +9,7 @@ const cors = require("cors");
 
 app.use(express.json());
 app.use(cors({
-  origin: 'https://buyit-frontend.vercel.app', // Allow requests from your frontend
+  origin: 'https://buyit-frontend.vercel.app/', // Allow requests from your frontend
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204

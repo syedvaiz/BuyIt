@@ -81,7 +81,7 @@ const Order = mongoose.model("Order", {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello syed database is connected and server is running");
+  res.send("Hello syed server is running");
 });
 
 // Login Endpoint

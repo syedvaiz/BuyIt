@@ -205,7 +205,6 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
-app.listen(port, (error) => {
-  if (!error) console.log("Server Running on port " + port);
-  else console.log("Error : ", error);
+app.listen(4000, () => {
+  console.log('Server is running on port 4000');
 });

@@ -12,7 +12,7 @@ const LoginSignup = () => {
 
   const login = async () => {
     let dataObj;
-    await fetch('https://buyit-api-theta.vercel.app', {
+    await fetch('https://buyit-api-theta.vercel.app/login', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',

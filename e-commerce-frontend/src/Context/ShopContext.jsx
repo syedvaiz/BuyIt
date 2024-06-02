@@ -17,7 +17,7 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-    fetch('https://buyit-api-theta.vercel.app/allproducts') 
+    fetch('https://buyit-api-theta.vercel.app/allproducts/') 
           .then((res) => res.json()) 
           .then((data) => setProducts(data))
 

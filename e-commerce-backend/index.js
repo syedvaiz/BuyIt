@@ -33,7 +33,7 @@ app.post("/upload", upload.single('product'), (req, res) => {
     image_url: `http://localhost:4000/images/${req.file.filename}`
   });
 });
-app.use('/images', express.static('upload/images'));
+// app.use('/images', express.static('upload/images'));
 
 // Middleware to fetch user from database
 const fetchuser = async (req, res, next) => {

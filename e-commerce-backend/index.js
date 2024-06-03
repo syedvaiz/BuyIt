@@ -18,7 +18,7 @@ app.use(cors({
 
 app.options('*', cors());
 
-mongoose.connect("mongodb+srv://Test:test123@cluster0.rgljqzx.mongodb.net/e-commerce", {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

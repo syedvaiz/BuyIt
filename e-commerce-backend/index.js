@@ -24,6 +24,10 @@ app.options('*', cors());
 mongoose.connect("mongodb+srv://Test:test123@cluster0.rgljqzx.mongodb.net/e-commerce", {
   useNewUrlParser: true,
   useUnifiedTopology: true
+}).then(() => {
+  console.log('MongoDB connected');
+}).catch((err) => {
+  console.log('MongoDB connection error:', err);
 });
 
 // Image Storage Engine

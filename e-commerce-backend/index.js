@@ -30,7 +30,7 @@ mongoose.connect("mongodb+srv://Test:test123@cluster0.rgljqzx.mongodb.net/e-comm
 
 // Image Storage Engine
 const storage = multer.diskStorage({
-  destination: './upload/images',
+  destination: path.join(__dirname, 'upload/images'), // Using __dirname to ensure the path is relative to the script
   filename: (req, file, cb) => {
     console.log(file);
     return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
@@ -46,6 +46,7 @@ app.post("/upload", upload.single('product'), (req, res) => {
 });
 
 app.use('/images', express.static(path.join(__dirname, 'upload/images')));
+
 
 // Middleware to fetch user from database
 const fetchuser = async (req, res, next) => {

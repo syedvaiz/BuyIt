@@ -45,7 +45,7 @@ app.post("/upload", upload.single('product'), (req, res) => {
   });
 });
 
-app.use('/images', express.static('upload/images'));
+app.use('/images', express.static(path.join(__dirname, 'upload/images')));
 
 // Middleware to fetch user from database
 const fetchuser = async (req, res, next) => {

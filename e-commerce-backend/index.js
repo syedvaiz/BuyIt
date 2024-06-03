@@ -8,45 +8,55 @@ const path = require("path");
 const cors = require("cors");
 
 app.use(express.json());
+
+// Enable CORS for all routes and methods
 app.use(cors({
-  origin: 'https://buyit-frontend.vercel.app/', // Allow requests from your frontend
+  origin: 'https://buyit-frontend.vercel.app', // Allow requests from your frontend
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
 }));
 
-// Database Connection With MongoDB
-mongoose.connect("mongodb+srv://Test:test123@cluster0.rgljqzx.mongodb.net/e-commerce");
+// Middleware to handle CORS preflight requests
+app.options('*', cors());
 
-// Image Storage Engine 
+// Database Connection With MongoDB
+mongoose.connect("mongodb+srv://Test:test123@cluster0.rgljqzx.mongodb.net/e-commerce", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+// Image Storage Engine
 const storage = multer.diskStorage({
   destination: './upload/images',
   filename: (req, file, cb) => {
     console.log(file);
-    return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+    return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
   }
 });
 const upload = multer({ storage: storage });
+
 app.post("/upload", upload.single('product'), (req, res) => {
   res.json({
     success: 1,
-    image_url: `https://buyit-api-theta.vercel.app/${req.file.filename}`
+    image_url: `https://buyit-api-theta.vercel.app/images/${req.file.filename}`
   });
 });
+
 app.use('/images', express.static('upload/images'));
 
 // Middleware to fetch user from database
 const fetchuser = async (req, res, next) => {
   const token = req.header("auth-token");
   if (!token) {
-    res.status(401).send({ errors: "Please authenticate using a valid token" });
+    return res.status(401).send({ errors: "Please authenticate using a valid token" });
   }
   try {
     const data = jwt.verify(token, "secret_ecom");
     req.user = data.user;
     next();
   } catch (error) {
-    res.status(401).send({ errors: "Please authenticate using a valid token" });
+    return res.status(401).send({ errors: "Please authenticate using a valid token" });
   }
 };
 
@@ -96,10 +106,10 @@ app.post('/login', async (req, res) => {
       const token = jwt.sign(data, 'secret_ecom');
       res.json({ success, token });
     } else {
-      return res.status(400).json({ success: success, errors: "please try with correct email/password" });
+      return res.status(400).json({ success: success, errors: "Please try with correct email/password" });
     }
   } else {
-    return res.status(400).json({ success: success, errors: "please try with correct email/password" });
+    return res.status(400).json({ success: success, errors: "Please try with correct email/password" });
   }
 });
 
@@ -108,7 +118,7 @@ app.post('/signup', async (req, res) => {
   let success = false;
   let check = await Users.findOne({ email: req.body.email });
   if (check) {
-    return res.status(400).json({ success: success, errors: "existing user found with this email" });
+    return res.status(400).json({ success: success, errors: "Existing user found with this email" });
   }
   let cart = {};
   for (let i = 0; i < 300; i++) {
@@ -205,6 +215,6 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
-app.listen(4000, () => {
-  console.log('Server is running on port 4000');
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

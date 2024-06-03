@@ -19,7 +19,7 @@ app.use(cors({
 app.options('*', cors());
 
 // Database Connection With MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect("mongodb+srv://Test:test123@cluster0.rgljqzx.mongodb.net/e-commerce", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 }).then(() => {

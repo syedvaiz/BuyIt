@@ -63,7 +63,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
     if(localStorage.getItem("auth-token"))
     {
-      fetch('https://buyit-api-theta.vercel.app/addtocart', {
+      fetch('https://buyit-api-theta.vercel.app/api/addtocart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',
@@ -81,7 +81,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
     if(localStorage.getItem("auth-token"))
     {
-      fetch('https://buyit-api-theta.vercel.app/removefromcart', {
+      fetch('https://buyit-api-theta.vercel.app/api/removefromcart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',

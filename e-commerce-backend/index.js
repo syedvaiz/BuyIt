@@ -93,6 +93,11 @@ app.get("/", (req, res) => {
   res.send("Hello syed server is running");
 });
 
+app.use((req, res, next) => {
+  console.log(`Request URL: ${req.url}`);
+  next();
+});
+
 app.post('/login', async (req, res) => {
   let success = false;
   try {

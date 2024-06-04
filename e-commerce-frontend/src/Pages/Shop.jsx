@@ -10,11 +10,11 @@ const Shop = () => {
   const [newcollection, setNewCollection] = useState([]);
 
   const fetchInfo = () => { 
-    fetch('https://buyit-api-theta.vercel.app/popularinwomen') 
+    fetch('https://buyit-api-theta.vercel.app/api/popularinwomen') 
       .then((res) => res.json()) 
       .then((data) => setPopular(data));
     
-    fetch('https://buyit-api-theta.vercel.app/newcollections') 
+      fetch('https://buyit-api-theta.vercel.app/api/newcollections') 
       .then((res) => res.json()) 
       .then((data) => setNewCollection(data));
   }

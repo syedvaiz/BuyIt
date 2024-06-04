@@ -17,13 +17,13 @@ const ShopContextProvider = (props) => {
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-    fetch('https://buyit-api-theta.vercel.app/allproducts') 
+    fetch('https://buyit-api-theta.vercel.app/api/allproducts') 
           .then((res) => res.json()) 
           .then((data) => setProducts(data))
 
     if(localStorage.getItem("auth-token"))
     {
-      fetch('https://buyit-api-theta.vercel.app/getcart', {
+      fetch('https://buyit-api-theta.vercel.app/api/getcart', {
       method: 'POST',
       headers: {
         Accept:'application/form-data',

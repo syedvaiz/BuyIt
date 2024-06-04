@@ -6,11 +6,6 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/index.js" },
-    { "src": "/upload/images/(.*)", "dest": "/upload/images/$1" },
-    { "src": "/(.*)", "dest": "/" }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -29,5 +24,9 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/index.js" },
+    { "source": "/upload/images/(.*)", "destination": "/upload/images/$1" }
   ]
 }

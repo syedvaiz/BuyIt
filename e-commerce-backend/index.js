@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const port = 4000;
+const port = process.env.PORT || 4000;
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -32,13 +32,12 @@ mongoose.connect(process.env.MONGODB_URI, {
 const storage = multer.diskStorage({
   destination: path.join(__dirname, 'upload/images'),
   filename: (req, file, cb) => {
-    console.log(file);
     return cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);
   }
 });
 const upload = multer({ storage: storage });
 
-app.post("/upload", upload.single('product'), (req, res) => {
+app.post("/api/upload", upload.single('product'), (req, res) => {
   res.json({
     success: 1,
     image_url: `https://buyit-api-theta.vercel.app/images/${req.file.filename}`
@@ -53,7 +52,7 @@ const fetchuser = async (req, res, next) => {
     return res.status(401).send({ errors: "Please authenticate using a valid token" });
   }
   try {
-    const data = jwt.verify(token, "secret_ecom");
+    const data = jwt.verify(token, process.env.JWT_SECRET);
     req.user = data.user;
     next();
   } catch (error) {
@@ -89,44 +88,32 @@ const Order = mongoose.model("Order", {
 });
 
 app.get("/", (req, res) => {
-  console.log("Root endpoint hit");
-  res.send("Hello syed server is running");
+  res.send("Hello Syed, server is running");
 });
 
-app.use((req, res, next) => {
-  console.log(`Request URL: ${req.url}`);
-  next();
-});
-
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   let success = false;
   try {
     let user = await Users.findOne({ email: req.body.email });
-    if (user) {
-      const passCompare = req.body.password === user.password;
-      if (passCompare) {
-        const data = { user: { id: user.id } };
-        success = true;
-        const token = jwt.sign(data, 'secret_ecom');
-        res.json({ success, token });
-      } else {
-        return res.status(400).json({ success: success, errors: "Please try with correct email/password" });
-      }
+    if (user && req.body.password === user.password) {
+      const data = { user: { id: user.id } };
+      success = true;
+      const token = jwt.sign(data, process.env.JWT_SECRET);
+      res.json({ success, token });
     } else {
-      return res.status(400).json({ success: success, errors: "Please try with correct email/password" });
+      res.status(400).json({ success, errors: "Invalid email/password" });
     }
   } catch (err) {
-    console.error("Login error:", err);
     res.status(500).json({ success: false, errors: "Internal Server Error" });
   }
 });
 
-app.post('/signup', async (req, res) => {
+app.post('/api/signup', async (req, res) => {
   let success = false;
   try {
     let check = await Users.findOne({ email: req.body.email });
     if (check) {
-      return res.status(400).json({ success: success, errors: "Existing user found with this email" });
+      return res.status(400).json({ success, errors: "User already exists" });
     }
     let cart = {};
     for (let i = 0; i < 300; i++) {
@@ -140,65 +127,55 @@ app.post('/signup', async (req, res) => {
     });
     await user.save();
     const data = { user: { id: user.id } };
-    const token = jwt.sign(data, 'secret_ecom');
+    const token = jwt.sign(data, process.env.JWT_SECRET);
     success = true;
     res.json({ success, token });
   } catch (err) {
-    console.error("Signup error:", err);
     res.status(500).json({ success: false, errors: "Internal Server Error" });
   }
 });
 
-app.get("/allproducts", async (req, res) => {
-  console.log("/allproducts endpoint hit");
+app.get("/api/allproducts", async (req, res) => {
   try {
     let products = await Product.find({});
     res.send(products);
   } catch (err) {
-    console.error("All products error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
-app.get("/newcollections", async (req, res) => {
-  console.log("/newcollections endpoint hit");
+app.get("/api/newcollections", async (req, res) => {
   try {
     let products = await Product.find({});
-    let arr = products.slice(1).slice(-8);
+    let arr = products.slice(-8);
     res.send(arr);
   } catch (err) {
-    console.error("New collections error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
-app.get("/popularinwomen", async (req, res) => {
-  console.log("/popularinwomen endpoint hit");
+app.get("/api/popularinwomen", async (req, res) => {
   try {
     let products = await Product.find({});
     let arr = products.splice(0, 4);
     res.send(arr);
   } catch (err) {
-    console.error("Popular in women error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
-app.post('/addtocart', fetchuser, async (req, res) => {
-  console.log("/addtocart endpoint hit");
+app.post('/api/addtocart', fetchuser, async (req, res) => {
   try {
     let userData = await Users.findOne({ _id: req.user.id });
     userData.cartData[req.body.itemId] += 1;
     await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
     res.send("Added");
   } catch (err) {
-    console.error("Add to cart error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
-app.post('/removefromcart', fetchuser, async (req, res) => {
-  console.log("/removefromcart endpoint hit");
+app.post('/api/removefromcart', fetchuser, async (req, res) => {
   try {
     let userData = await Users.findOne({ _id: req.user.id });
     if (userData.cartData[req.body.itemId] != 0) {
@@ -207,34 +184,23 @@ app.post('/removefromcart', fetchuser, async (req, res) => {
     await Users.findOneAndUpdate({ _id: req.user.id }, { cartData: userData.cartData });
     res.send("Removed");
   } catch (err) {
-    console.error("Remove from cart error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
-app.post('/getcart', fetchuser, async (req, res) => {
-  console.log("/getcart endpoint hit");
+app.post('/api/getcart', fetchuser, async (req, res) => {
   try {
     let userData = await Users.findOne({ _id: req.user.id });
     res.json(userData.cartData);
   } catch (err) {
-    console.error("Get cart error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
-app.post("/addproduct", async (req, res) => {
-  console.log("/addproduct endpoint hit");
+app.post("/api/addproduct", async (req, res) => {
   try {
     let products = await Product.find({});
-    let id;
-    if (products.length > 0) {
-      let last_product_array = products.slice(-1);
-      let last_product = last_product_array[0];
-      id = last_product.id + 1;
-    } else {
-      id = 1;
-    }
+    let id = products.length > 0 ? products.slice(-1)[0].id + 1 : 1;
     const product = new Product({
       id: id,
       name: req.body.name,
@@ -246,30 +212,25 @@ app.post("/addproduct", async (req, res) => {
     await product.save();
     res.json({ success: true, name: req.body.name });
   } catch (err) {
-    console.error("Add product error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
-app.post("/removeproduct", async (req, res) => {
-  console.log("/removeproduct endpoint hit");
+app.post("/api/removeproduct", async (req, res) => {
   try {
-    const product = await Product.findOneAndDelete({ id: req.body.id });
+    await Product.findOneAndDelete({ id: req.body.id });
     res.json({ success: true, name: req.body.name });
   } catch (err) {
-    console.error("Remove product error:", err);
     res.status(500).json({ errors: "Internal Server Error" });
   }
 });
 
 app.post('/api/orders', async (req, res) => {
-  console.log("/api/orders endpoint hit");
   try {
     const newOrder = new Order(req.body);
     await newOrder.save();
     res.status(201).json({ success: true, message: "Order placed successfully" });
   } catch (error) {
-    console.error("Order error:", error);
     res.status(500).json({ success: false, message: "Failed to place order" });
   }
 });
